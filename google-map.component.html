@@ -1,0 +1,37 @@
+<agm-map
+      [latitude]="Latitude"
+      [longitude]="Longitude"
+      [zoom]="zoom"
+      [streetViewControl]="false"
+      
+    >
+    <!-- (mapClick)="addMarker($event.coords.lat, $event.coords.lng)" -->
+    <agm-marker-cluster 
+      imagePath="https://raw.githubusercontent.com/googlemaps/v3-utility-library/master/markerclustererplus/images/m"
+      maxZoom = "12">
+    <agm-marker-spider>
+      <agm-marker *ngFor="let marker of markers" (mapReady)="mapReading()" [latitude]="marker.Latitude"
+        [longitude]="marker.Longitude" [opacity]="marker.alpha" [markerDraggable]="isDragabble"
+        (dragEnd)="markerDragEnd(marker.Latitude, marker.Longitude, $event)"
+        (markerClick)="selectMarker($event, marker)"
+        (mouseOver)="onMouseOver(infoWindow, $event)" (mouseOut)="onMouseOut(infoWindow, $event)"
+        [iconUrl] = "marker.is_alert == 1 ? 'https://maps.google.com/mapfiles/ms/icons/orange-dot.png' : marker.boxStatus == 'UP'?'https://maps.google.com/mapfiles/ms/icons/green-dot.png':'https://maps.google.com/mapfiles/ms/icons/red-dot.png'"
+        (dragEnd)="markerDragEnd(marker.lat, marker.long, $event)">
+        <agm-info-window [disableAutoPan]="false" #infoWindow>
+          <div class="info-window">
+            <p class="mb-2">Company:- <b>{{marker.companyName}}</b></p>
+            <p class="mb-2">Location:- <b>{{marker.productName}}</b></p>
+            <p class="mb-2">Status:- <b>{{marker.boxStatus}}</b></p>
+          </div>
+        </agm-info-window>
+      </agm-marker>
+    </agm-marker-spider>
+  </agm-marker-cluster>
+  <agm-polyline *ngFor="let marker of markers_link" [editable]="false" [geodesic]="true" [strokeWeight]="1"
+    [strokeColor]="marker[0].link =='UP'?'#0f0':'#f00'">
+    <agm-polyline-point *ngFor="let markerLink of marker" [latitude]="markerLink.Latitude"
+      [longitude]="markerLink.Longitude">
+    </agm-polyline-point>
+
+  </agm-polyline>
+</agm-map>
