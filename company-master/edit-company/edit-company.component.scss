@@ -1,0 +1,9 @@
+.modal-body {
+    max-height: calc(100vh - 250px) !important;
+    overflow: auto !important;
+}
+
+form .form-group {
+    margin-bottom: 0 !important;
+    min-height: 85px !important;
+}

@@ -1,0 +1,185 @@
+<form [formGroup]="addCompanyForm" (ngSubmit)="addForm()">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Add Company Details</h4>
+        <button type="button" class="close" aria-label="Close" (click)="close()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="card mb-4" style="display:none;">
+            <div class="card-body">
+                <div class="card-title mb-3">Partner Type</div>
+                <div class="row">
+
+                    <!-- <label for="type">Partner Type</label> -->
+                    <div class="form-control">
+                        <input type="radio" formControlName="type" name="type" value="1" />Country Partner
+                        <input type="radio" formControlName="type" name="type" value="2" />Distributor
+                        <input type="radio" formControlName="type" name="type" value="3" />Reseller
+                        <input type="radio" formControlName="type" name="type" value="4" />Client
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 form-group mb-3">
+                        <label for="companyName">Company Name<sup class="text-danger">*</sup></label>
+                        <input
+                            [ngClass]="{ 'is-invalid': details.companyName.errors && (details.companyName.dirty || details.companyName.touched)}"
+                            type="text" class="form-control" formControlName="companyName" id="companyName"
+                            minlength="2" maxlength="25" placeholder="Company Name" />
+
+                        <div *ngFor="let validation of validationMessage.companyName" class="invalid-feedback">
+                            <div
+                                *ngIf="addCompanyForm.get('companyName').hasError(validation.type) && (addCompanyForm.get('companyName').dirty || addCompanyForm.get('companyName').touched)">
+                                {{validation.message}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 form-group mb-3">
+                        <label for="address">Address<sup class="text-danger">*</sup></label>
+                        <textarea
+                            [ngClass]="{ 'is-invalid': details.address.errors && (details.address.dirty || details.address.touched)}"
+                            type="text" class="form-control" formControlName="address" id="address" maxlength="150"
+                            placeholder="Address">
+                                </textarea>
+
+                        <div *ngFor="let validation of validationMessage.address" class="invalid-feedback">
+                            <div
+                                *ngIf="addCompanyForm.get('address').hasError(validation.type) && (addCompanyForm.get('address').dirty || addCompanyForm.get('address').touched)">
+                                {{validation.message}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 form-group mb-3">
+                        <label for="country">Country<sup class="text-danger">*</sup></label>
+                        <select
+                            [ngClass]="{ 'is-invalid': details.countryId.errors && (details.countryId.dirty || details.countryId.touched)}"
+                            class="form-control" formControlName="countryId" id="countryId" placeholder="select"
+                            (change)="changeStateAsPerCountry($event.target.value)">
+                            <option value="">-- Select --</option>
+                            <option *ngFor="let country of allCountries" value="{{country.CountryId}}">
+                                {{country.CountryName}}
+                            </option>
+                        </select>
+                        <div *ngFor="let validation of validationMessage.countryId" class="invalid-feedback">
+                            <div
+                                *ngIf="addCompanyForm.get('countryId').hasError(validation.type) && (addCompanyForm.get('countryId').dirty || addCompanyForm.get('countryId').touched)">
+                                {{validation.message}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 form-group mb-3">
+                        <label for="country">State<sup class="text-danger">*</sup></label>
+                        <select
+                            [ngClass]="{ 'is-invalid': details.stateId.errors && (details.stateId.dirty || details.stateId.touched)}"
+                            class="form-control" formControlName="stateId" id="stateId" placeholder="select"
+                            (change)="changeCityAsPerState()">
+                            <option value="">-- Select --</option>
+                            <option *ngFor="let state of allStates" value="{{state.StateId}}">
+                                {{state.StateName}}
+                            </option>
+                        </select>
+                        <div *ngFor="let validation of validationMessage.stateId" class="invalid-feedback">
+                            <div
+                                *ngIf="addCompanyForm.get('stateId').hasError(validation.type) && (addCompanyForm.get('stateId').dirty || addCompanyForm.get('stateId').touched)">
+                                {{validation.message}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 form-group mb-3">
+                        <label for="country">City<sup class="text-danger">*</sup></label>
+                        <select
+                            [ngClass]="{ 'is-invalid': details.cityId.errors && (details.cityId.dirty || details.cityId.touched)}"
+                            class="form-control" formControlName="cityId" id="cityId" placeholder="select">
+                            <option value="">-- Select --</option>
+                            <option *ngFor="let city of allCities" value="{{city.CityId}}">
+                                {{city.CityName}}
+                            </option>
+                        </select>
+                        <div *ngFor="let validation of validationMessage.cityId" class="invalid-feedback">
+                            <div
+                                *ngIf="addCompanyForm.get('cityId').hasError(validation.type) && (addCompanyForm.get('cityId').dirty || addCompanyForm.get('cityId').touched)">
+                                {{validation.message}}
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="col-md-6 form-group mb-3">
+                        <label for="">2 Step Authentication setting</label>
+                        <div class="row">
+                            <div class="col">
+                                <input type="checkbox" formControlName="isEmailOtp" (change)="checkedEmailOtp(addCompanyForm.value.isEmailOtp?'1':'0')"> Email OTP
+                             </div>
+                             <div class="col">
+                                <input type="checkbox" formControlName="isSmsOtp" (change)="checkedSmsOtp(addCompanyForm.value.isSmsOtp?'1':'0')"> SMS OTP
+                             </div>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="card-title mb-3">Admin Contact Details</div>
+                <div class="row">
+                    <div class="col-md-6 form-group mb-3">
+                        <label for="contactName">Name<sup class="text-danger">*</sup></label>
+                        <input
+                            [ngClass]="{ 'is-invalid': details.contactName.errors && (details.contactName.dirty || details.contactName.touched)}"
+                            type="text" class="form-control" formControlName="contactName" id="contactName"
+                            minlength="2" maxlength="25" placeholder="Company Name" />
+
+                        <div *ngFor="let validation of validationMessage.contactName" class="invalid-feedback">
+                            <div
+                                *ngIf="addCompanyForm.get('contactName').hasError(validation.type) && (addCompanyForm.get('contactName').dirty || addCompanyForm.get('contactName').touched)">
+                                {{validation.message}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 form-group mb-3">
+                        <label for="companyEmail">Login Email<sup class="text-danger">*</sup><small>(Reset password link will be sent on this email address)</small></label>
+                        <input
+                            [ngClass]="{ 'is-invalid': details.companyEmail.errors && (details.companyEmail.dirty || details.companyEmail.touched)}"
+                            type="text" class="form-control" formControlName="companyEmail" id="companyEmail"
+                            placeholder="Login Email" />
+
+                        <div *ngFor="let validation of validationMessage.companyEmail" class="invalid-feedback">
+                            <div
+                                *ngIf="addCompanyForm.get('companyEmail').hasError(validation.type) && (addCompanyForm.get('companyEmail').dirty || addCompanyForm.get('companyEmail').touched)">
+                                {{validation.message}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 form-group mb-3">
+                        <label for="mobileNo">Mobile Number<sup class="text-danger">*</sup></label>
+                        <input
+                            [ngClass]="{ 'is-invalid': details.mobileNo.errors && (details.mobileNo.dirty || details.mobileNo.touched)}"
+                            type="text" class="form-control" formControlName="mobileNo" id="mobileNo" minlength="10"
+                            maxlength="10" pattern="[0-9]+" placeholder="Mobile Number" />
+
+                        <div *ngFor="let validation of validationMessage.mobileNo" class="invalid-feedback">
+                            <div
+                                *ngIf="addCompanyForm.get('mobileNo').hasError(validation.type) && (addCompanyForm.get('mobileNo').dirty || addCompanyForm.get('mobileNo').touched)">
+                                {{validation.message}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 form-group mt-4">
+                        <div>
+                           <input type="checkbox" formControlName="isAllowMac" (change)="checkedValue(addCompanyForm.value.isAllowMac?'1':'0')"> Allow Mac
+                        </div>
+                    </div>    
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary float-right" [disabled]="!addCompanyForm.valid">Submit</button>
+    </div>
+</form>
